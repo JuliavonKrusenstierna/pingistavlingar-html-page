@@ -23,16 +23,8 @@
   --display:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
   --body:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
 }
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#0e1410; --surface:#161f19; --fg:#e6ede8; --muted:#a3b2a8; --line:#2a372e; --soft:#1c271f;
-  --table:#4d9c62; --table-ink:#07130b; --table-soft:#1a2c1f; --club:#2c6339; --club-ink:#000000; --link:#8fd2a0; --ball:#ff8a45; --ball-soft:#3d2414;
-  --ok:#6fd39c; --ok-soft:#143523; --warn:#f2b55c; --warn-soft:#3a2a10; --bad:#f08a9a; --bad-soft:#3d1820;
-  --pink:#f08cbd; --pink-soft:#3b1a2c; --shadow:0 1px 2px rgba(0,0,0,.3); color-scheme:dark}}
-:root[data-theme="dark"]{
-  --bg:#0e1410; --surface:#161f19; --fg:#e6ede8; --muted:#a3b2a8; --line:#2a372e; --soft:#1c271f;
-  --table:#4d9c62; --table-ink:#07130b; --table-soft:#1a2c1f; --club:#2c6339; --club-ink:#000000; --link:#8fd2a0; --ball:#ff8a45; --ball-soft:#3d2414;
-  --ok:#6fd39c; --ok-soft:#143523; --warn:#f2b55c; --warn-soft:#3a2a10; --bad:#f08a9a; --bad-soft:#3d1820;
-  --pink:#f08cbd; --pink-soft:#3b1a2c; --shadow:0 1px 2px rgba(0,0,0,.3); color-scheme:dark}
+
+
 
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.5}
@@ -202,14 +194,10 @@ article.t.closed .day,article.t.later .day{background:var(--soft);color:var(--mu
   --body:"Roboto",system-ui,-apple-system,"Segoe UI",sans-serif;
   --shadow:0 1px 3px rgba(0,0,0,.08);
 }
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#111412; --surface:#1a1f1c; --fg:#e8ece9; --muted:#a6aea8; --line:#2c332e; --soft:#222824;
-  --table:#2f9a5a; --table-ink:#06130b; --table-soft:#173022; --link:#5fd08c; --jg-link:#5fd08c; --jg-soft:#173022; color-scheme:dark}}
-:root[data-theme="dark"]{
-  --bg:#111412; --surface:#1a1f1c; --fg:#e8ece9; --muted:#a6aea8; --line:#2c332e; --soft:#222824;
-  --table:#2f9a5a; --table-ink:#06130b; --table-soft:#173022; --link:#5fd08c; --jg-link:#5fd08c; --jg-soft:#173022; color-scheme:dark}
 
-body{background:var(--bg);font-family:var(--body);color:var(--fg)}
+
+
+body{background:var(--bg);font-family:var(--body);color:var(--fg);color-scheme:light}
 .page{max-width:1000px;margin:24px auto 40px;background:var(--surface);box-shadow:0 1px 4px rgba(0,0,0,.12);padding:16px}
 header.mast{background:none;color:#fff;border:0;overflow:visible}
 header.mast::after{display:none}
