@@ -44,7 +44,7 @@ h1{font-family:var(--display);font-weight:700;font-size:clamp(40px,7vw,60px);lin
 .lede.small{font-size:13.5px;font-weight:500;margin-top:4px}
 
 /* Toolbar */
-.toolbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--surface);border-bottom:1px solid var(--line);box-shadow:var(--shadow)}
+.toolbar{position:static;background:var(--surface);border-bottom:1px solid var(--line);box-shadow:var(--shadow)}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
 .toolbar .wrap{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;padding-block:12px}
 .search{position:relative;flex:1 1 240px;min-width:0}
@@ -210,7 +210,7 @@ header.mast::after{display:none}
 .intro-h{font:700 clamp(24px,3.4vw,32px)/1.15 var(--display);margin:0 0 10px;color:var(--fg);letter-spacing:.02em;font-kerning:none}
 .intro p{margin:0 0 8px;max-width:70ch;font-size:16px}
 .intro .small{font-size:14.5px;color:var(--muted)}
-.toolbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;padding:14px 28px;background:var(--surface);border-bottom:1px solid var(--line);box-shadow:none}
+.toolbar{position:static;display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;padding:14px 28px;background:var(--surface);border-bottom:1px solid var(--line);box-shadow:none}
 body::before{background:var(--surface)}
 .search input{border-radius:4px;background:var(--soft);border:1px solid var(--line)}
 .search input:focus{border-color:var(--jg);box-shadow:0 0 0 3px var(--jg-soft);background:var(--surface)}
@@ -258,6 +258,14 @@ footer p{margin:0 0 6px}
 .pay p:last-child{margin-bottom:0}
 .swish{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px}
 .swish .num{font:700 24px var(--display);letter-spacing:.04em;color:var(--jg);user-select:all;font-variant-numeric:tabular-nums}
+
+/* Search box: clear and easy to find */
+.search{display:flex;flex-direction:column;gap:4px}
+.search .sl{font-weight:700;font-size:14.5px;color:var(--fg)}
+.search input{height:50px;font-size:16px!important;padding:0 44px 0 46px!important;border:2px solid var(--jg)!important;border-radius:6px!important;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 24 24' fill='none' stroke='%230b6b36' stroke-width='2.4' stroke-linecap='round'%3E%3Ccircle cx='10.5' cy='10.5' r='6.5'/%3E%3Cpath d='M15.5 15.5L21 21'/%3E%3C/svg%3E") no-repeat 14px center!important;box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.search input::placeholder{color:#4d534f;opacity:1}
+.search input:focus{box-shadow:0 0 0 4px var(--jg-soft)!important}
+.search button{bottom:11px;top:auto!important;transform:none!important}
 </style>
 
 <style>
@@ -280,9 +288,9 @@ article.t.closed{opacity:.8}
 <div class="page">
 
   <section class="intro">
-    <h1 class="intro-h">Inom ca 1,5 timme från Stockholm</h1>
+    <h1 class="sr">Tävlingar</h1>
     <p>Klasser, avgifter och datum kommer från inbjudningarna. Kontrollera alltid inbjudan innan du anmäler dig.</p>
-    <p class="small"><i>Inga Sweden Tour GP eller Sweden Star tävlingar visas.</i></p>
+    <p class="small"><i>De tävlingar som visas ligger ca 1,5 timme från Stockholm. Inga Sweden Tour GP eller Sweden Star tävlingar visas.</i></p>
     <div class="pay">
       <h3>Så betalar du</h3>
       <p>Vänta med att betala tills klubben har bekräftat din anmälan. Swisha sedan anmälningsavgiften till Jarlabergs BTK:</p>
@@ -293,8 +301,8 @@ article.t.closed{opacity:.8}
 
   <div class="toolbar">
     <div class="search">
-      <label class="sr" for="q">Sök</label>
-      <input type="search" id="q" placeholder="Sök tävling, ort, klubb eller klass" autocomplete="off">
+      <label class="sl" for="q">Sök bland tävlingarna</label>
+      <input type="search" id="q" placeholder="Skriv namn, ort, klubb eller klass" autocomplete="off">
       <button type="button" id="q-clear" aria-label="Rensa sökningen" hidden>×</button>
     </div>
     <button type="button" class="chip" id="f-tjej" aria-pressed="false" hidden>Bara Tjejraketen</button>
