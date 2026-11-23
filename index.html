@@ -16,7 +16,7 @@
    Each card leads with the entry status, then when and where. One accent colour (club green) throughout. */
 :root{
   --bg:#f2f4f1; --surface:#ffffff; --fg:#18221b; --muted:#56635a; --line:#dde4dd; --soft:#f1f5f1;
-  --table:#2c6339; --table-ink:#ffffff; --table-soft:#e5efe7; --club:#2c6339; --club-ink:#000000; --link:#22522d; --ball:#d9570f; --ball-soft:#fde6d8;
+  --table:#1d4e8f; --table-ink:#ffffff; --table-soft:#e5efe7; --club:#1d4e8f; --club-ink:#000000; --link:#163f78; --ball:#d9570f; --ball-soft:#fde6d8;
   --ok:#1f7a4a; --ok-soft:#dcf1e5; --warn:#975400; --warn-soft:#fbf0dc; --bad:#a3283a; --bad-soft:#f9e3e6;
   --pink:#b0306e; --pink-soft:#f8dcea;
   --shadow:0 1px 2px rgba(24,34,27,.06),0 4px 14px rgba(24,34,27,.05);
@@ -163,7 +163,7 @@ article.t.closed .day,article.t.later .day{background:var(--soft);color:var(--mu
 .status span{display:block;color:var(--muted);font-size:14.5px}
 .sdot{flex:none;width:10px;height:10px;border-radius:50%;margin-top:6px;background:var(--muted)}
 .st-open{background:var(--table-soft)}
-.st-open .sdot{background:var(--table);box-shadow:0 0 0 4px rgba(44,99,57,.15)}
+.st-open .sdot{background:var(--table);box-shadow:0 0 0 4px rgba(29,78,143,.15)}
 .st-open b{color:var(--link)}
 .st-closed .sdot{background:var(--bad)}
 .st-closed b{color:var(--bad)}
@@ -187,9 +187,9 @@ article.t.closed .day,article.t.later .day{background:var(--soft);color:var(--mu
 
 /* ===== Jarlabergs BTK site style ===== */
 :root{
-  --jg:#0b6b36; --jg-dark:#0a5a2e; --jg-line:#0d7a3e; --jg-link:#0c5a2e; --jg-soft:#e8f3ec;
+  --jg:#1d4e8f; --jg-dark:#163d70; --jg-line:#0d7a3e; --jg-link:#163f78; --jg-soft:#e6eef8;
   --bg:#e8e9e7; --surface:#ffffff; --fg:#222222; --muted:#4d534f; --line:#e3e5e2; --soft:#f2f3f1;
-  --table:#0b6b36; --table-ink:#ffffff; --table-soft:#e8f3ec; --link:#0c5a2e;
+  --table:#1d4e8f; --table-ink:#ffffff; --table-soft:#e6eef8; --link:#163f78;
   --display:"Roboto Condensed","Arial Narrow",system-ui,sans-serif;
   --body:"Roboto",system-ui,-apple-system,"Segoe UI",sans-serif;
   --shadow:0 1px 3px rgba(0,0,0,.08);
@@ -229,7 +229,7 @@ article.t.closed .day,article.t.later .day{background:transparent;color:var(--mu
 .tag{border-radius:3px;font-size:12.5px;text-transform:uppercase;letter-spacing:.04em;background:var(--soft);border:0}
 .status{border-radius:4px}
 .st-open{background:var(--jg-soft)}
-.st-open .sdot{background:var(--jg);box-shadow:0 0 0 4px rgba(11,107,54,.15)}
+.st-open .sdot{background:var(--jg);box-shadow:0 0 0 4px rgba(29,78,143,.15)}
 .st-open b{color:var(--jg)}
 .btn{border-radius:4px;color:var(--jg-link);border-color:var(--line);font-weight:500}
 .btn:hover{border-color:var(--jg);color:var(--jg)}
