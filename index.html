@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>body{margin:0}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>Pingistävlingar Stockholm</title>
+<script>document.documentElement.lang="sv";</script>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@700&family=Roboto:wght@400;500;700&display=swap">
+<style>
+/* Layout: Jarlaberg-green masthead, a sticky search bar, then tournament cards grouped by month of play.
+   Each card leads with the entry status, then when and where. One accent colour (club green) throughout. */
+:root{
+  --bg:#f2f4f1; --surface:#ffffff; --fg:#18221b; --muted:#56635a; --line:#dde4dd; --soft:#f1f5f1;
+  --table:#2c6339; --table-ink:#ffffff; --table-soft:#e5efe7; --club:#2c6339; --club-ink:#000000; --link:#22522d; --ball:#d9570f; --ball-soft:#fde6d8;
+  --ok:#1f7a4a; --ok-soft:#dcf1e5; --warn:#975400; --warn-soft:#fbf0dc; --bad:#a3283a; --bad-soft:#f9e3e6;
+  --pink:#b0306e; --pink-soft:#f8dcea;
+  --shadow:0 1px 2px rgba(24,34,27,.06),0 4px 14px rgba(24,34,27,.05);
+  --display:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
+  --body:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0e1410; --surface:#161f19; --fg:#e6ede8; --muted:#a3b2a8; --line:#2a372e; --soft:#1c271f;
+  --table:#4d9c62; --table-ink:#07130b; --table-soft:#1a2c1f; --club:#2c6339; --club-ink:#000000; --link:#8fd2a0; --ball:#ff8a45; --ball-soft:#3d2414;
+  --ok:#6fd39c; --ok-soft:#143523; --warn:#f2b55c; --warn-soft:#3a2a10; --bad:#f08a9a; --bad-soft:#3d1820;
+  --pink:#f08cbd; --pink-soft:#3b1a2c; --shadow:0 1px 2px rgba(0,0,0,.3); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0e1410; --surface:#161f19; --fg:#e6ede8; --muted:#a3b2a8; --line:#2a372e; --soft:#1c271f;
+  --table:#4d9c62; --table-ink:#07130b; --table-soft:#1a2c1f; --club:#2c6339; --club-ink:#000000; --link:#8fd2a0; --ball:#ff8a45; --ball-soft:#3d2414;
+  --ok:#6fd39c; --ok-soft:#143523; --warn:#f2b55c; --warn-soft:#3a2a10; --bad:#f08a9a; --bad-soft:#3d1820;
+  --pink:#f08cbd; --pink-soft:#3b1a2c; --shadow:0 1px 2px rgba(0,0,0,.3); color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.5}
+.wrap{max-width:960px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+a{color:var(--link)}
+:focus-visible{outline:3px solid var(--ball);outline-offset:2px;border-radius:4px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.skip{position:absolute;left:-999px;top:8px;background:var(--surface);color:var(--fg);padding:8px 12px;border-radius:8px;z-index:20}
+.skip:focus{left:16px}
+
+/* Masthead */
+header.mast{background:var(--club);color:var(--club-ink);position:relative;overflow:hidden}
+header.mast::after{content:"";position:absolute;right:-60px;top:-60px;width:220px;height:220px;border-radius:50%;border:2px solid rgba(255,255,255,.14);pointer-events:none}
+header.mast .wrap{padding-block:34px 30px;display:flex;flex-direction:column;gap:8px;position:relative;z-index:1}
+h1{font-family:var(--display);font-weight:700;font-size:clamp(40px,7vw,60px);line-height:.95;margin:0 0 6px;letter-spacing:.01em}
+.lede{max-width:62ch;margin:0;font-size:16px;font-weight:500}
+.lede.small{font-size:13.5px;font-weight:500;margin-top:4px}
+
+/* Toolbar */
+.toolbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--surface);border-bottom:1px solid var(--line);box-shadow:var(--shadow)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+.toolbar .wrap{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;padding-block:12px}
+.search{position:relative;flex:1 1 240px;min-width:0}
+.search input{width:100%;font:inherit;padding:10px 36px 10px 14px;border:1px solid var(--line);border-radius:999px;background:var(--soft);color:var(--fg)}
+.search input:focus{background:var(--surface);border-color:var(--table);outline:none;box-shadow:0 0 0 3px var(--table-soft)}
+.search button{position:absolute;right:6px;top:50%;transform:translateY(-50%);border:0;background:none;color:var(--muted);font-size:18px;line-height:1;padding:4px 6px;cursor:pointer;border-radius:6px}
+.chip{font:600 13px var(--body);border:1px solid var(--pink);background:var(--surface);color:var(--pink);padding:7px 12px;border-radius:999px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--pink);color:#fff}
+
+/* Groups */
+main .wrap{padding-block:22px 48px;display:flex;flex-direction:column;gap:30px}
+.group h2{font-family:var(--display);font-weight:700;font-size:22px;letter-spacing:.05em;text-transform:uppercase;margin:0 0 12px;color:var(--link);display:flex;align-items:center;gap:10px}
+.group h2::after{content:"";flex:1;height:1px;background:var(--line)}
+.group h2 .n{font-family:var(--body);font-size:13px;font-weight:600;letter-spacing:0;text-transform:none;color:var(--muted)}
+.list{display:flex;flex-direction:column;gap:14px}
+
+/* Card */
+article.t{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px 22px;display:flex;flex-direction:column;gap:14px;scroll-margin-top:90px;box-shadow:var(--shadow);transition:box-shadow .15s,transform .15s}
+article.t.tjej{box-shadow:inset 4px 0 0 var(--pink)}
+article.t:target{outline:3px solid var(--ball);outline-offset:2px}
+.head{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 12px}
+.head h3{font-family:var(--display);font-weight:700;font-size:28px;line-height:1.05;margin:0;flex:1 1 auto;min-width:0;letter-spacing:.01em}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{font:600 12px var(--body);padding:3px 10px;border-radius:999px;background:var(--surface);color:var(--muted);border:1px solid var(--line)}
+.tag.ok{background:var(--ok-soft);color:var(--ok)}
+.tag.warn{background:var(--warn-soft);color:var(--warn)}
+.tag.pink{background:var(--pink-soft);color:var(--pink)}
+
+.deadline{display:flex;align-items:center;gap:14px;background:var(--table-soft);border-left:4px solid var(--table);border-radius:10px;padding:12px 16px}
+.dl-text{display:flex;flex-direction:column;gap:2px;min-width:0}
+.dl-lbl{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--link)}
+.dl-date{font-size:18px;font-weight:700;color:var(--fg)}
+.dl-sub{font-size:14px;color:var(--muted)}
+.dl-left{flex:none;margin-left:auto;font-weight:700;font-size:14px;color:var(--link);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px 12px;white-space:nowrap}
+.facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:0}
+.facts > div{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 14px;min-width:0}
+.facts dt{font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.facts dd{margin:2px 0 0;font-weight:600;font-size:15px}
+.facts dd small{display:block;font-weight:400;font-size:13px;color:var(--muted)}
+
+.summary{margin:0;max-width:70ch}
+.note{margin:0;font-size:14px;background:var(--warn-soft);color:var(--fg);border-radius:10px;padding:10px 14px}
+.note b{color:var(--warn)}
+
+.actions{display:flex;flex-wrap:wrap;gap:8px}
+.btn{display:inline-flex;align-items:center;gap:6px;font:600 14px var(--body);padding:9px 14px;border-radius:999px;text-decoration:none;border:1px solid var(--line);color:var(--fg);background:var(--surface)}
+.btn:hover{border-color:var(--link);color:var(--link)}
+.btn.primary{background:var(--table);border-color:var(--table);color:var(--table-ink)}
+.btn.primary:hover{filter:brightness(1.1);color:var(--table-ink)}
+
+details.more{border-top:1px solid var(--line);padding-top:12px}
+details.more summary{cursor:pointer;font-weight:600;font-size:14px;color:var(--link);list-style:none;display:flex;align-items:center;gap:8px;width:max-content;max-width:100%}
+details.more summary::-webkit-details-marker{display:none}
+details.more summary::before{content:"";width:8px;height:8px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(-45deg);transition:transform .15s}
+details.more[open] summary::before{transform:rotate(45deg)}
+.more-body{display:flex;flex-direction:column;gap:12px;margin-top:12px}
+.more-body h4{margin:0;font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.rules{margin:0;font-size:14px;max-width:75ch}
+
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:700}
+td.fee,th.fee{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+td.cls{font-weight:600}
+tbody tr:nth-child(odd){background:var(--soft)}
+
+.empty{text-align:center;color:var(--muted);padding:40px 16px;background:var(--surface);border:1px dashed var(--line);border-radius:14px}
+.empty button{margin-top:10px}
+
+footer{color:var(--muted);font-size:13px;border-top:1px solid var(--line)}
+footer .wrap{padding-block:18px 30px;display:flex;flex-direction:column;gap:6px}
+footer p{margin:0;max-width:80ch}
+
+@media (max-width:640px){
+  article.t{padding:16px}
+  .head h3{font-size:23px}
+  .facts{grid-template-columns:1fr 1fr;gap:8px}
+  .deadline{flex-wrap:wrap;gap:8px 12px}
+  .dl-left{margin-left:0}
+  .toolbar{position:static}
+  /* Class table becomes a stacked list on phones */
+  table,thead,tbody,tr,td{display:block}
+  thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+  tbody tr:nth-child(odd){background:none}
+  tbody tr{padding:10px 0;border-radius:0;border-bottom:1px solid var(--line);margin:0}
+  tbody tr:last-child{border-bottom:0}
+  td{border:0;padding:2px 0}
+  td.fee{text-align:left}
+  td[data-l]:not(.cls)::before{content:attr(data-l) ": ";color:var(--muted);font-size:12.5px}
+}
+@media (prefers-reduced-motion:reduce){details.more summary::before,article.t{transition:none}}
+
+/* ===== Card redesign: date column + content ===== */
+header.mast::after{display:none}
+header.mast{border-bottom:5px solid #ffffff}
+header.mast .wrap{padding-block:30px 26px}
+h1{font-size:clamp(40px,6vw,56px)}
+main .wrap{gap:26px}
+.list{gap:12px}
+article.t{display:grid;grid-template-columns:92px minmax(0,1fr);padding:0;gap:0;overflow:hidden;border-radius:14px}
+article.t.closed{opacity:1}
+article.t.later{border-style:solid}
+.day{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:2px;padding:20px 6px;background:var(--table-soft);color:var(--link);font-family:var(--display);text-align:center;border-right:1px solid var(--line)}
+.day .dn{font-size:30px;font-weight:700;line-height:1}
+.day .dm{font-size:15px;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+.day .dw{font-family:var(--body);font-size:13px;color:var(--muted);margin-top:2px}
+article.t.closed .day,article.t.later .day{background:var(--soft);color:var(--muted)}
+.body{padding:18px 22px 16px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.head{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px}
+.head h3{font-size:26px;flex:1 1 auto;color:var(--fg)}
+.where{margin:-4px 0 0;font-weight:600;font-size:14.5px}
+.where .addr{font-weight:400;color:var(--muted)}
+.where{font-size:15px}
+.status{display:flex;align-items:flex-start;gap:10px;font-size:14.5px;padding:10px 14px;border-radius:10px;background:var(--soft);border:0}
+.status b{display:block;font-weight:700}
+.status span{display:block;color:var(--muted);font-size:14.5px}
+.sdot{flex:none;width:10px;height:10px;border-radius:50%;margin-top:6px;background:var(--muted)}
+.st-open{background:var(--table-soft)}
+.st-open .sdot{background:var(--table);box-shadow:0 0 0 4px rgba(44,99,57,.15)}
+.st-open b{color:var(--link)}
+.st-closed .sdot{background:var(--bad)}
+.st-closed b{color:var(--bad)}
+.st-soon .sdot{background:var(--warn)}
+.st-soon b{color:var(--warn)}
+.summary{font-size:14.5px;color:var(--muted);line-height:1.55}
+.prev{font-size:12.5px;font-style:italic}
+.foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 16px;border-top:1px solid var(--line);padding-top:12px;margin-top:2px}
+.foot details.more{border-top:0;padding-top:0;flex:1 1 100%;order:2}
+.foot details.more[open]{margin-top:4px}
+.foot .actions{order:1}
+.btn{padding:7px 14px;font-size:14.5px}
+@media (max-width:640px){
+  article.t{grid-template-columns:64px minmax(0,1fr)}
+  .day{padding:16px 4px}
+  .day .dn{font-size:22px}
+  .day .dm{font-size:13px}
+  .body{padding:14px 14px 12px}
+  .head h3{font-size:22px}
+}
+
+/* ===== Jarlabergs BTK site style ===== */
+:root{
+  --jg:#0b6b36; --jg-dark:#0a5a2e; --jg-line:#0d7a3e; --jg-link:#0c5a2e; --jg-soft:#e8f3ec;
+  --bg:#e8e9e7; --surface:#ffffff; --fg:#222222; --muted:#4d534f; --line:#e3e5e2; --soft:#f2f3f1;
+  --table:#0b6b36; --table-ink:#ffffff; --table-soft:#e8f3ec; --link:#0c5a2e;
+  --display:"Roboto Condensed","Arial Narrow",system-ui,sans-serif;
+  --body:"Roboto",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --shadow:0 1px 3px rgba(0,0,0,.08);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#111412; --surface:#1a1f1c; --fg:#e8ece9; --muted:#a6aea8; --line:#2c332e; --soft:#222824;
+  --table:#2f9a5a; --table-ink:#06130b; --table-soft:#173022; --link:#5fd08c; --jg-link:#5fd08c; --jg-soft:#173022; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111412; --surface:#1a1f1c; --fg:#e8ece9; --muted:#a6aea8; --line:#2c332e; --soft:#222824;
+  --table:#2f9a5a; --table-ink:#06130b; --table-soft:#173022; --link:#5fd08c; --jg-link:#5fd08c; --jg-soft:#173022; color-scheme:dark}
+
+body{background:var(--bg);font-family:var(--body);color:var(--fg)}
+.page{max-width:1000px;margin:24px auto 40px;background:var(--surface);box-shadow:0 1px 4px rgba(0,0,0,.12);padding:16px}
+header.mast{background:none;color:#fff;border:0;overflow:visible}
+header.mast::after{display:none}
+.banner{position:relative;overflow:hidden;background:var(--jg);min-height:150px;display:flex;align-items:center;padding:24px 28px}
+.banner::before{content:"";position:absolute;right:-40px;top:-30px;width:55%;height:180%;transform:rotate(-18deg);opacity:.16;
+  background:repeating-linear-gradient(0deg,#000 0 2px,transparent 2px 22px),repeating-linear-gradient(90deg,#000 0 2px,transparent 2px 22px);border:3px solid #000}
+.banner::after{content:"";position:absolute;right:-120px;top:-90px;width:380px;height:380px;border-radius:50%;background:rgba(255,255,255,.06)}
+.banner h1{font-kerning:none;position:relative;z-index:1;font-family:var(--display);font-weight:700;text-transform:uppercase;color:#fff;font-size:clamp(40px,7vw,68px);letter-spacing:.04em;line-height:1;margin:0}
+.intro{padding:24px 28px 8px}
+.intro-h{font:700 clamp(24px,3.4vw,32px)/1.15 var(--display);margin:0 0 10px;color:var(--fg);letter-spacing:.02em;font-kerning:none}
+.intro p{margin:0 0 8px;max-width:70ch;font-size:16px}
+.intro .small{font-size:14.5px;color:var(--muted)}
+.toolbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;padding:14px 28px;background:var(--surface);border-bottom:1px solid var(--line);box-shadow:none}
+body::before{background:var(--surface)}
+.search input{border-radius:4px;background:var(--soft);border:1px solid var(--line)}
+.search input:focus{border-color:var(--jg);box-shadow:0 0 0 3px var(--jg-soft);background:var(--surface)}
+main#out{padding:22px 28px 30px;display:flex;flex-direction:column;gap:26px}
+.group h2{font:700 24px var(--display);text-transform:none;letter-spacing:0;color:var(--fg);margin:0 0 10px;border-bottom:2px solid var(--jg);padding-bottom:6px}
+.group h2::after{display:none}
+.group h2 .n{color:var(--muted);font-weight:400}
+.list{gap:0}
+article.t{border:0;border-bottom:1px solid var(--line);border-radius:0;box-shadow:none;background:transparent;grid-template-columns:80px minmax(0,1fr)}
+.day{background:transparent;border-right:0;color:var(--jg);padding:18px 4px}
+.day .dn{font-family:var(--display);font-size:30px}
+.day .dm{font-family:var(--display);letter-spacing:.06em}
+article.t.closed .day,article.t.later .day{background:transparent;color:var(--muted)}
+.body{padding:16px 8px 16px 12px}
+.head h3{font:700 23px/1.15 var(--display);color:var(--fg)}
+.tag{border-radius:3px;font-size:12.5px;text-transform:uppercase;letter-spacing:.04em;background:var(--soft);border:0}
+.status{border-radius:4px}
+.st-open{background:var(--jg-soft)}
+.st-open .sdot{background:var(--jg);box-shadow:0 0 0 4px rgba(11,107,54,.15)}
+.st-open b{color:var(--jg)}
+.btn{border-radius:4px;color:var(--jg-link);border-color:var(--line);font-weight:500}
+.btn:hover{border-color:var(--jg);color:var(--jg)}
+.btn.primary{background:var(--jg);border-color:var(--jg);color:#fff}
+.btn.primary:hover{background:var(--jg-dark);filter:none;color:#fff}
+details.more summary{color:var(--jg-link)}
+footer{border-top:1px solid var(--line);padding:16px 28px 8px;font-size:14px;color:var(--muted)}
+footer p{margin:0 0 6px}
+@media (max-width:640px){
+  .page{margin:0;padding:0;box-shadow:none}
+  .banner{min-height:110px;padding:18px 16px}
+  .intro{padding:18px 16px 4px}
+  .toolbar{padding:12px 16px}
+  main#out{padding:16px 16px 24px}
+  footer{padding:14px 16px 8px}
+  article.t{grid-template-columns:58px minmax(0,1fr)}
+  .body{padding:14px 4px 14px 8px}
+  .day .dn{font-size:19px;white-space:nowrap}
+  .day .dm{font-size:12px}
+}
+
+/* Payment box */
+.pay{margin:16px 0 8px;padding:16px 18px;border:1px solid var(--line);border-left:4px solid var(--jg);border-radius:4px;background:var(--soft);max-width:70ch}
+.pay h3{margin:0 0 6px;font:700 19px var(--display);color:var(--fg)}
+.pay p{margin:0 0 8px;font-size:15px}
+.pay p:last-child{margin-bottom:0}
+.swish{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px}
+.swish .num{font:700 24px var(--display);letter-spacing:.04em;color:var(--jg);user-select:all;font-variant-numeric:tabular-nums}
+.copy{font:500 13px var(--body);padding:6px 12px;border-radius:4px;border:1px solid var(--line);background:var(--surface);color:var(--jg-link);cursor:pointer}
+.copy:hover{border-color:var(--jg)}
+</style>
+
+<style>
+/* Upcoming cards: quieter, no entry deadline yet */
+article.t.later{background:var(--surface);border-style:dashed}
+.shut{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;background:var(--bad-soft);border-left:4px solid var(--bad);border-radius:10px;padding:12px 16px}
+.shut .p-lbl{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--bad)}
+.shut .p-main{font-size:17px;font-weight:700;color:var(--bad)}
+.shut .p-sub{font-size:14px;color:var(--muted);flex-basis:100%}
+article.t.closed{opacity:.8}
+.pending{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;background:var(--soft);border-left:4px solid var(--line);border-radius:10px;padding:12px 16px}
+.pending .p-lbl{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.pending .p-main{font-size:17px;font-weight:700;color:var(--fg)}
+.pending .p-sub{font-size:14px;color:var(--muted);flex-basis:100%}
+.prev{font-size:13px;color:var(--muted);margin:0}
+</style>
+
+<a class="skip" href="#out">Hoppa till tävlingarna</a>
+
+<div class="page">
+  <header class="mast">
+    <div class="banner"><h1>Tävlingar</h1></div>
+  </header>
+
+  <section class="intro">
+    <h2 class="intro-h">Inom ca 1,5 timme från Stockholm</h2>
+    <p>Klasser, avgifter och datum kommer från inbjudningarna. Kontrollera alltid inbjudan innan du anmäler dig.</p>
+    <p class="small"><i>Inga Sweden Tour GP eller Sweden Star tävlingar visas.</i></p>
+    <div class="pay">
+      <h3>Så betalar du</h3>
+      <p>Vänta med att betala tills klubben har bekräftat din anmälan. Swisha sedan anmälningsavgiften till Jarlabergs BTK:</p>
+      <p class="swish"><span class="num" id="swish-nr">123 063 58 21</span> <button type="button" class="copy" id="swish-copy">Kopiera nummer</button></p>
+      <p>Skriv ditt namn, tävlingen och klassen i meddelandet, så vet vi vad betalningen gäller. Till exempel: <i>”Anna Svensson, Jarlabergsspelen, Max 1500p”</i>.</p>
+    </div>
+  </section>
+
+  <div class="toolbar">
+    <div class="search">
+      <label class="sr" for="q">Sök</label>
+      <input type="search" id="q" placeholder="Sök tävling, ort, klubb eller klass" autocomplete="off">
+      <button type="button" id="q-clear" aria-label="Rensa sökningen" hidden>×</button>
+    </div>
+    <button type="button" class="chip" id="f-tjej" aria-pressed="false" hidden>Bara Tjejraketen</button>
+  </div>
+
+  <main id="out" tabindex="-1"></main>
+
+  <footer>
+    <p>Källor: SBTF:s tävlingsprogram 2026–27, Stockholms Bordtennisförbund, Stupa/Pingisarenan och arrangörernas webbplatser. Listan uppdateras måndagar och torsdagar.</p>
+    <p>Alla anmälningar görs via Julia von Krusenstierna.</p>
+  </footer>
+</div>
+
+<script>
+const DATA = [{"name": "Bajen Cup 2026", "start": "2026-11-28", "end": "2026-11-29", "city": "Stockholm", "venue": "Liljeholmshallen", "address": "Liljeholmsstranden 15, Stockholm", "drive": 10, "organizer": "Hammarby IF BTF", "type": "Nationell tävling", "deadline": "2026-11-08", "status": "published", "summary": "Pooltävling för främst yngre och mindre rutinerade spelare. Lördag: ungdomsklasser efter födelseår. Söndag: storpooler och öppna divisionsklasser efter ranking. Bäst av 5 i pooler.", "note": "Anmälan stängde 8 nov. Efteranmälan tas emot om det finns plats ().", "classes": [{"name": "P10 / P12", "desc": "Pojkar födda 2016 / 2014 eller senare", "day": "Lör pass 1, 09:00", "fee": 160}, {"name": "F10 / F12 / F14", "desc": "Flickor födda 2016 / 2014 / 2012 eller senare (sammanslagna till F10–13 i programmet)", "day": "Lör pass 1, 11:45", "fee": 160}, {"name": "P9 / P11", "desc": "Pojkar födda 2017 / 2015 eller senare", "day": "Lör pass 2, 13:30", "fee": 160}, {"name": "P13", "desc": "Pojkar födda 2013 eller senare", "day": "Lör pass 2, 16:30", "fee": 160}, {"name": "F9 / F11 / F13", "desc": "Flickor födda 2017 / 2015 / 2013 eller senare", "day": "Lör pass 2", "fee": 160}, {"name": "Storpooler", "desc": "Pooler om 6–8 spelare efter rankingpoäng, alla åldrar", "day": "Sön pass 1, 09:00", "fee": 250}, {"name": "Öppen divisionsklass", "desc": "Grupper om 16 efter rankingpoäng, öppen för alla", "day": "Sön pass 2, 13:30", "fee": 250}], "extra": "Max en klass per pass. Flickor får även spela pojkklasserna.", "stupa": "https://sbtfeventsott.stupaevents.com/events/319/0/0/1/1", "invite": "https://drive.google.com/file/d/1koV0LoG1gTDYdTN_VrT7O0nlo1SAwAK7/view", "web": "https://www.hammarbybordtennis.se/sida/?ID=398952", "vis": true}, {"name": "Tuna Entreprenad Poolen", "start": "2026-11-28", "end": "2026-11-29", "city": "Eskilstuna", "venue": "Munktellarenan", "address": "Verkstadsgatan 5, Eskilstuna", "drive": 80, "organizer": "Eskilstuna BTK", "type": "Nationell tävling", "deadline": "2026-11-15", "status": "published", "summary": "Pooltävling med divisionsklasser (H1–H7, DÖ, D3) och ungdomsklasser P/F 9–15. Två vidare från varje pool till utslagning, bäst av 5.", "note": "Anmälan stängde 15 nov, men klubbens sida säger fortfarande ”anmälan snarast” ().", "classes": [{"name": "H1, H3, H6, DÖ", "desc": "Seniorklasser", "day": "Lör 09:00", "fee": 180}, {"name": "F11 / P11", "desc": "Flickor / pojkar 11", "day": "Lör 09:00", "fee": 120}, {"name": "H2, H4, H7", "desc": "Seniorklasser", "day": "Lör 13:00", "fee": 180}, {"name": "F13 / P13, F9 / P9", "desc": "Flickor / pojkar 13 och 9 (pris till alla i 9-klassen)", "day": "Lör 13:00", "fee": 120}, {"name": "H5, D3", "desc": "Seniorklasser", "day": "Lör 17:00", "fee": 180}, {"name": "F15 / P15", "desc": "Flickor / pojkar 15", "day": "Lör 17:00", "fee": 120}, {"name": "H3, H5, H7", "desc": "Seniorklasser (omgång 2)", "day": "Sön 09:00", "fee": 180}, {"name": "F12 / P12", "desc": "Flickor / pojkar 12", "day": "Sön 09:00", "fee": 120}, {"name": "H2, H4, H6", "desc": "Seniorklasser (omgång 2)", "day": "Sön 13:00", "fee": 180}, {"name": "F10 / P10, F14 / P14", "desc": "Flickor / pojkar 10 och 14", "day": "Sön 13:00", "fee": 120}], "extra": "Max 2 klasser per dag, 1 per pass. Betalning via Swish till Eskilstuna BTK.", "stupa": null, "invite": "https://drive.google.com/file/d/1VarjzgESKXFNXLIrqywugKzQcT1ID7Ip/view", "web": "https://www.ebtk.se/Page/452847"}, {"name": "RM Svealandsmästerskapen 2026", "start": "2026-12-05", "end": "2026-12-06", "city": "Södertälje", "venue": "Västergård Arena", "address": "Södertälje", "drive": 35, "organizer": "Södertälje BTK", "type": "Mästerskap (RM)", "deadline": "2026-11-22", "status": "published", "summary": "Regionmästerskap för licensierade spelare i Svealandsdistrikten, bl.a. Stockholm. Singel i 3-pooler + utslagning, dubbel ren utslagning. Veteranklasser och prispengar i senior- och 20-klasser.", "note": "Mästerskap, inte en vanlig pooltävling. Anmälan via klubben på Stupa senast söndag 22 nov.", "classes": [{"name": "HD / DD", "desc": "Herr- / damdubbel senior", "day": "Lör pass 1", "fee": 200}, {"name": "HJ18D / DJ18D", "desc": "Juniordubbel 18", "day": "Lör pass 1", "fee": 160}, {"name": "P16D, F16D, P14D, F14D", "desc": "Ungdomsdubbel 16 och 14", "day": "Lör pass 1", "fee": 140}, {"name": "Herrar / Damer singel", "desc": "Senior; prispengar 2000/1000/500 kr vid minst 8 deltagare", "day": "Lör pass 2", "fee": 300}, {"name": "P14 / F14", "desc": "Pojkar / flickor 14", "day": "Lör pass 2", "fee": 160}, {"name": "HJ18 / DJ18", "desc": "Junior 18 singel", "day": "Lör pass 3", "fee": 180}, {"name": "P12 / F12", "desc": "Pojkar / flickor 12", "day": "Lör pass 3", "fee": 160}, {"name": "Mixed senior", "desc": "Mixeddubbel", "day": "Sön pass 1", "fee": 200}, {"name": "Mixed 18", "desc": "Mixeddubbel junior (avgift från Stupa)", "day": "Sön pass 1", "fee": 160}, {"name": "Mixed 16 / 14", "desc": "Mixeddubbel ungdom (avgift från Stupa)", "day": "Sön pass 1", "fee": 140}, {"name": "H/D 40, 50, 60", "desc": "Veteraner singel", "day": "Sön pass 1", "fee": 180}, {"name": "P11 / F11 (Pingisiaden)", "desc": "Pojkar / flickor 11", "day": "Sön pass 2", "fee": 160}, {"name": "P16 / F16", "desc": "Pojkar / flickor 16", "day": "Sön pass 2", "fee": 160}, {"name": "H20 / D20", "desc": "Prispengar 1000/500/250 kr vid minst 8 deltagare", "day": "Sön pass 2", "fee": 180}], "extra": "Max en klass per pass. Hotell Best Western Skogshöjd 900 m från hallen. Avgifter faktureras klubben.", "stupa": "https://sbtfeventsott.stupaevents.com/events/557/0/0/1/1", "invite": "https://www.svenskalag.se/sodertaljebtk/dokument/40d9002a-d9b5-434b-b672-9bb67cb13b80", "web": "https://www.svenskalag.se/sodertaljebtk/sida/131893/svealandsmasterskapen2026"}, {"name": "Decemberduellen 2026", "start": "2026-12-12", "end": "2026-12-13", "city": "Tyresö", "venue": "Skrubbahallen", "address": "Skrubba Allé 36, Tyresö", "drive": 25, "organizer": "Tyresö BTK", "type": "Breddtävling", "deadline": "2026-11-27", "status": "published", "summary": "Breddtävling för barn och ungdomar som inte tävlat så mycket, med lätta och svåra klasser och rankingtak för äldre spelare. Söndag eftermiddag en öppen klass (max 1500 p) där även vuxna får spela.", "note": "Minst D-licens. Födda 2014 eller tidigare får inte spela en klass om rankingpoängen överstiger klassens tak. Max 2 barn-/ungdomsklasser per dag plus öppenklassen.", "classes": [{"name": "Barn 7", "desc": "Född 2019 eller senare", "day": "Lör", "fee": 150}, {"name": "Barn 8 lätt / svår", "desc": "Född 2018 eller senare", "day": "Lör", "fee": 150}, {"name": "Barn 9 lätt / svår", "desc": "Född 2017 eller senare", "day": "Lör", "fee": 150}, {"name": "Barn 10 lätt / svår", "desc": "Född 2016 eller senare", "day": "Lör", "fee": 150}, {"name": "Barn 11 lätt / svår", "desc": "Född 2015 eller senare", "day": "Lör", "fee": 150}, {"name": "Flickklass", "desc": "Flickor födda 2015 eller senare", "day": "Lör", "fee": 150}, {"name": "Ungdom 12 lätt / svår", "desc": "Född 2014 eller senare, max 800 p", "day": "Sön", "fee": 150}, {"name": "Ungdom 13 lätt / svår", "desc": "Född 2013 eller senare, max 900 p", "day": "Sön", "fee": 150}, {"name": "Ungdom 15 lätt / svår", "desc": "Född 2011 eller senare, max 1100 p", "day": "Sön", "fee": 150}, {"name": "Flickklass", "desc": "Flickor födda 2011–2014, max 800 p", "day": "Sön", "fee": 150}, {"name": "Öppenklass", "desc": "Även vuxna; indelas efter ranking, max 1500 p; priser", "day": "Sön em", "fee": 190}], "extra": "Föreningen anmäler med 10-siffrigt personnummer till . Pass brukar starta 09.00, 12.30 och 16.00. Pooler, två bästa till A-slutspel, bäst av 5. Efteranmälan på plats i mån av plats (Swish/kontant).", "stupa": null, "invite": "https://www.angby.com/_files/ugd/47d5b4_67a523e4f6fc4f5da0cc418c72e22e28.pdf", "web": "https://tyresobtk.klubbenonline.se/tavlingar"}, {"name": "Sparbanken pool 2026", "start": "2026-12-19", "end": "2026-12-20", "city": "Kungsängen", "venue": "Kungshallen", "address": "Klockvägen 5, Kungsängen", "drive": 30, "organizer": "Tibble-Kungsängens BTK", "type": "Nationell tävling", "deadline": "2026-12-11", "status": "published", "summary": "Pooltävling för både rutinerade och nyare spelare. Lördag förmiddag ungdomsklasser efter födelseår, övriga pass öppna divisionsklasser om ca 16 spelare med prispengar.", "classes": [{"name": "P9 / F9", "desc": "Födda 2017 eller senare", "day": "Lör pass 1, ca 09:00", "fee": 140}, {"name": "P11 / F11", "desc": "Födda 2015 eller senare", "day": "Lör pass 1, ca 09:00", "fee": 140}, {"name": "P13 / F13", "desc": "Födda 2013 eller senare", "day": "Lör pass 1, ca 09:00", "fee": 140}, {"name": "Öppen klass lördag", "desc": "Alla åldrar, divisioner om ca 16 efter ranking; prispengar", "day": "Lör pass 2, ca 14:00", "fee": 200}, {"name": "Öppen klass FM", "desc": "Alla åldrar, divisioner om ca 16; prispengar", "day": "Sön pass 1, ca 09:30", "fee": 200}, {"name": "Öppen klass EM", "desc": "Alla åldrar, divisioner om ca 16; prispengar", "day": "Sön pass 2, ca 14:00", "fee": 200}], "extra": "Anmälan via klubben till  med 8-siffrigt födelsedatum. Max 1 klass per pass, max 80 spelare per pass. Efteranmälan på plats om plats finns.", "stupa": null, "invite": "https://www.svenskalag.se/tibblekungsangenbtk/dokument/63c25797-8c4b-46e9-8c32-753fc5bdf840", "web": "https://www.svenskalag.se/tibblekungsangenbtk/nyheter/2593570/inbjudan-till-sparbanken-pool-2026"}, {"name": "Bajens Sköna Julskoj", "start": "2026-12-26", "end": "2026-12-26", "city": "Hägersten", "venue": "Liljeholmshallen", "address": "Mejerivägen 3, Liljeholmen", "drive": 10, "organizer": "Hammarby IF BTF", "type": "Nationell tävling", "deadline": "2026-12-12", "status": "published", "summary": "Avslappnad annandagstävling. Förmiddag öppen divisionsklass efter ranking; eftermiddag familjedubbel och en lagtävling för tvåmannalag med Stiga Cybershape-racketar.", "classes": [{"name": "Öppen divisionsklass", "desc": "Grupper om 16 efter rankingpoäng, pooler bäst av 5 + utslagning (licens krävs)", "day": "Lör fm, ca 09:30", "fee": 250}, {"name": "Familjedubbel max 13 år", "desc": "Yngsta spelaren född 2013 eller senare; ingen licens krävs", "day": "Lör em, ca 13:00", "fee": 200}, {"name": "Stiga Cybershape Team", "desc": "Tvåmannalag, KingsCup-format; racketar lånas ut; ej rankinggrundande", "day": "Lör em, ca 13:00", "fee": 300}], "extra": "Anmälan till , en samlad anmälan per klubb. Max en klass per pass.", "stupa": null, "invite": "https://drive.google.com/file/d/1RDOenGYGyQUy2I2XDeb3HetbkllZVmk1/view", "web": "https://www.hammarbybordtennis.se/sida/?ID=398958"}, {"name": "Nyårspoolen 2027", "start": "2027-01-02", "end": "2027-01-03", "city": "Uppsala", "venue": "UTK-hallen", "address": "Edith Södergrans gata 7, Uppsala", "drive": 55, "organizer": "Sunnersta AIF", "type": "Nationell tävling", "deadline": null, "status": "previous_year", "summary": null, "note": null, "classes": [], "extra": null, "stupa": null, "invite": null, "web": "https://www.svenskalag.se/sunnerstaaif/sida/102899/nyarspoolen"}, {"name": "Pingisiaden Riks Flickor 2027", "start": "2027-01-02", "end": "2027-01-03", "city": "Bromma", "venue": "Ulvsunda Idrottscentrum", "address": "Bryggerivägen 12, Bromma", "drive": 15, "organizer": "SBTF och Ängby SK", "type": "SBTF-tävling", "deadline": "2026-12-06", "status": "published", "summary": "Riksfinal i Pingisiaden för flickor födda 2015 eller senare. Fri anmälan, inget kval krävs. Poolspel i flera steg så att alla får många matcher, och medaljer till alla.", "note": "Ängby SK-spelare anmäler sig internt via klubbens formulär senast 3 dec.", "classes": [{"name": "Flickor (Pingisiaden Riks)", "desc": "Födda 2015 eller senare. Poolspel i flera steg; spelarna dömer själva.", "day": "Lör 09:00 – sön ca 17:00", "fee": 400}], "extra": "Föreningen anmäler på Pingisarenan (Stupa); avgiften faktureras föreningen. Avprickning senast 08:15 lördag. Lunchbiljetter kan beställas klubbvis av Ängby SK. Kontakt: , .", "stupa": "https://sbtfeventsott.stupaevents.com/events/603/0/0/1/1", "invite": "https://sbtf.se/wp-content/uploads/2026/11/Pingisiaden-Riks-Flickor-2027-inbjudan.pdf", "web": "https://www.angby.com/tavlingsanmalan", "vis": true}, {"name": "Pingisiaden Riks Pojkar 2027", "start": "2027-01-02", "end": "2027-01-03", "city": "Farsta", "venue": "Farsta Sim- och Idrottshall", "address": "Farstaängsvägen 3, Farsta", "drive": 20, "organizer": "SBTF och Spårvägens BTK", "type": "SBTF-tävling", "deadline": "2026-12-06", "status": "published", "summary": "Riksfinal i Pingisiaden för pojkar födda 2015 eller senare. Fri anmälan, inget kval krävs. Poolspel i flera steg så att alla får många matcher, och medaljer till alla.", "classes": [{"name": "Pojkar (Pingisiaden Riks)", "desc": "Födda 2015 eller senare. Poolspel i flera steg; spelarna dömer själva.", "day": "Lör 09:00 – sön ca 17:00", "fee": 400}], "extra": "Föreningen anmäler på Pingisarenan (Stupa); avgiften faktureras föreningen. Avprickning senast 08:15 lördag. Cafeteria i hallen. Kontakt: , .", "stupa": "https://sbtfeventsott.stupaevents.com/events/408/0/0/1/1", "invite": "https://sbtf.se/wp-content/uploads/2026/11/Pingisiaden-Riks-Pojkar-2027-inbjudan.pdf", "web": "https://www.sparvagenbtk.se"}, {"name": "8 januari-driven", "start": "2027-01-08", "end": "2027-01-08", "city": "Liljeholmen", "venue": "Liljeholmshallen", "address": "Mejerivägen 4, Stockholm", "drive": 10, "organizer": "Stockholms BTF", "type": "Drive-in", "deadline": null, "status": "previous_year", "summary": null, "note": null, "classes": [], "stupa": null, "invite": null, "web": "https://www.stbtf.se/tavlingar-seriespel-ranking/drive-in/", "drive_in": true, "extra": null}, {"name": "STIGA-Talangen, heat 2", "start": "2027-01-23", "end": "2027-01-23", "city": "Liljeholmen", "venue": "Liljeholmshallen", "address": "Mejerivägen 4, Stockholm", "drive": 10, "organizer": "Stockholms BTF och STIGA", "type": "Distriktstävling (ungdom)", "opens": "2026-12-07", "deadline": "2027-01-11", "status": "published", "summary": "Tävling för barn födda 2015 eller senare, både nybörjare och vana spelare, även utan klubb. Grupper om ca 5 där alla möter alla. Kval till finalhelgen 10–11 april.", "note": "Anmälan till heat 2 är öppen 7 dec – 11 jan. Heat 3 (27 feb) har anmälan 25 jan – 12 feb. Den som redan kvalat till final får inte spela fler heat.", "classes": [{"name": "P/F födda 2015, 2016, 2017, 2018", "desc": "En klass per årskull; bäst av 3", "day": "Lör", "fee": 130}, {"name": "P/F födda 2019 eller senare", "desc": "Bäst av 3", "day": "Lör", "fee": 130}], "extra": "Anmälan med namn, födelseår och klubb/skola till . Avgiften faktureras föreningen; spelare utan klubb betalar med Swish på plats. Medalj till alla.", "stupa": null, "invite": "https://www.stbtf.se/wp-content/uploads/2026/10/Inbjudan-Stiga-talangen-2026-27.pdf", "web": "https://www.stbtf.se/tavlingar-seriespel-ranking/stiga-talangen/"}, {"name": "NJ Elinstallation Poolen", "start": "2027-01-30", "end": "2027-01-31", "city": "Eskilstuna", "venue": "Munktellarenan", "address": "Verkstadsgatan 5, Eskilstuna", "drive": 80, "organizer": "Eskilstuna BTK", "type": "Nationell tävling", "deadline": null, "status": "previous_year", "summary": null, "note": null, "classes": [], "extra": null, "stupa": null, "invite": null, "web": "https://www.ebtk.se/Page/452847"}, {"name": "Ängbys Vinterpool", "start": "2027-01-30", "end": "2027-01-31", "city": "Bromma", "venue": "Bromma", "address": "", "drive": 20, "organizer": "Ängby SK", "type": "Nationell tävling", "deadline": null, "status": "previous_year", "summary": null, "note": null, "classes": [], "extra": null, "stupa": null, "invite": null, "web": "https://www.angby.com/vinterpoolen"}, {"name": "Skyttorpspoolen", "start": "2027-02-06", "end": "2027-02-07", "city": "Vattholma", "venue": "Vattholma Sporthall", "address": "Malmvågsvägen 4, Vattholma", "drive": 70, "organizer": "Skyttorps IF", "type": "Nationell tävling", "deadline": null, "status": "previous_year", "summary": null, "note": null, "classes": [], "extra": null, "stupa": null, "invite": null, "web": "https://www.laget.se/skyttorpsif-pingis/News/7989926/SkyttorpsPoolen-2026"}, {"name": "Februariduellen 2027", "start": "2027-02-06", "end": "2027-02-07", "city": "Tyresö", "venue": "Tyresö", "address": "", "drive": 25, "organizer": "Tyresö BTK", "type": "Breddtävling", "deadline": null, "status": "not_published", "summary": null, "classes": [], "stupa": null, "invite": null, "web": "https://tyresobtk.klubbenonline.se/tavlingar", "note": null, "extra": null}, {"name": "Korpen STIGA Open VT2027", "start": "2027-02-20", "end": "2027-02-20", "city": "Liljeholmen", "venue": "Liljeholmshallens Pingiscenter", "address": "Mejerivägen 4, Liljeholmen", "drive": 10, "organizer": "Korpen Stockholm", "type": "Korpen (motion)", "deadline": "2027-01-31", "status": "published", "summary": "Korpens singelturnering för alla nivåer, ca 09–16. Fyra klasser A–D efter spelnivå; grupper om ca 5 där två går vidare till cupspel, bäst av 5.", "note": null, "classes": [{"name": "A-klass", "desc": "Spelare som tränar/tävlar regelbundet på hög nivå (t.ex. Korpen div 1–3)", "day": "Lör", "fee": 280}, {"name": "B-klass", "desc": "Fritidsspelare som tränar regelbundet (t.ex. div 4–7)", "day": "Lör", "fee": 280}, {"name": "C-klass", "desc": "Korpens lägsta divisioner eller spontanspelare", "day": "Lör", "fee": 280}, {"name": "D-klass", "desc": "Nybörjare", "day": "Lör", "fee": 280}], "extra": "Kontakt: , 08-699 63 80.", "stupa": null, "invite": "https://korpenstockholm.zoezi.se/tavlingslista/4?tavling=korpen-stiga-open-vt2027&tavlingid=571", "web": "https://www.korpen.se/korpenstockholm/aktiviteter/bordtennis/tavling/"}, {"name": "Sunnerstasmashen 2027", "start": "2027-02-27", "end": "2027-02-27", "city": "Uppsala", "venue": "Uppsala Life Arena", "address": "Axel Johanssons gata 1, Uppsala", "drive": 55, "organizer": "Sunnersta AIF", "type": "Nationell tävling", "deadline": null, "status": "previous_year", "summary": null, "note": null, "classes": [], "extra": null, "stupa": null, "invite": null, "web": "https://www.svenskalag.se/sunnerstaaif/sida/102897/sunnerstasmashen"}, {"name": "STIGA-Talangen, heat 3", "start": "2027-02-27", "end": "2027-02-27", "city": "Liljeholmen", "venue": "Liljeholmshallen", "address": "Mejerivägen 4, Stockholm", "drive": 10, "organizer": "Stockholms BTF och STIGA", "type": "Distriktstävling (ungdom)", "opens": "2027-01-25", "deadline": "2027-02-12", "status": "published", "summary": "Sista kvalheatet till STIGA-Talangens finalhelg 10–11 april, för barn födda 2015 eller senare.", "classes": [{"name": "P/F födda 2015, 2016, 2017, 2018", "desc": "En klass per årskull; bäst av 3", "day": "Lör", "fee": 130}, {"name": "P/F födda 2019 eller senare", "desc": "Bäst av 3", "day": "Lör", "fee": 130}], "extra": "Anmälan till .", "stupa": null, "invite": "https://www.stbtf.se/wp-content/uploads/2026/10/Inbjudan-Stiga-talangen-2026-27.pdf", "web": "https://www.stbtf.se/tavlingar-seriespel-ranking/stiga-talangen/"}, {"name": "Norrtäljespelen 2027", "start": "2027-03-06", "end": "2027-03-07", "city": "Norrtälje", "venue": "Norrtälje Sportcentrum", "address": "Gustaf Adolfs väg 53, Norrtälje", "drive": 60, "organizer": "Norrtälje BTK", "type": "Nationell tävling", "deadline": null, "status": "previous_year", "summary": null, "note": null, "classes": [], "extra": null, "stupa": null, "invite": null, "web": "https://www.norrtaljebtk.se/Page/492094"}, {"name": "Mars-duellen 2027", "start": "2027-03-06", "end": "2027-03-07", "city": "Tyresö", "venue": "Tyresö", "address": "", "drive": 25, "organizer": "Tyresö BTK", "type": "Breddtävling", "deadline": null, "status": "not_published", "summary": null, "classes": [], "stupa": null, "invite": null, "web": "https://tyresobtk.klubbenonline.se/tavlingar", "note": null, "extra": null}, {"name": "19 mars-driven", "start": "2027-03-19", "end": "2027-03-19", "city": "Liljeholmen", "venue": "Liljeholmshallen", "address": "Mejerivägen 4, Stockholm", "drive": 10, "organizer": "Stockholms BTF", "type": "Drive-in", "deadline": null, "status": "previous_year", "summary": null, "classes": [], "stupa": null, "invite": null, "web": "https://www.stbtf.se/tavlingar-seriespel-ranking/drive-in/", "drive_in": true, "note": null, "extra": null}, {"name": "Påsksmällen 2027", "start": "2027-04-03", "end": "2027-04-04", "city": "Åkersberga", "venue": "Österåkers Multiarena", "address": "Företagsallén, Åkersberga", "drive": 35, "organizer": "IFK Österåkers BTK", "type": "Nationell tävling", "deadline": null, "status": "previous_year", "summary": null, "note": null, "classes": [], "stupa": null, "invite": null, "web": "https://www.ifkosterakersbtk.se/btk/grp/xtcmplist.php", "extra": null}, {"name": "Boo Cupen", "start": "2027-04-04", "end": "2027-04-04", "city": "Saltsjö-Boo", "venue": "Boo Rackethall", "address": "Mensättravägen 36, Saltsjö-Boo", "drive": 25, "organizer": "Boo Racketklubb", "type": "Distriktstävling (ungdom)", "deadline": null, "status": "previous_year", "summary": null, "classes": [], "stupa": null, "invite": null, "web": "https://www.boopingis.se/", "note": null, "extra": null}, {"name": "Ängbys Vårpool", "start": "2027-04-17", "end": "2027-04-18", "city": "Bromma / Hässelby", "venue": "Bromma / Hässelby", "address": "", "drive": 25, "organizer": "Ängby SK", "type": "Nationell tävling", "deadline": null, "status": "previous_year", "summary": null, "note": null, "classes": [], "extra": null, "stupa": null, "invite": null, "web": "https://www.angby.com/tavlingsanmalan"}, {"name": "Korpen dubbeltävling", "start": "2027-04-17", "end": "2027-04-17", "city": "Stockholm", "venue": "Stockholm", "address": "", "drive": 15, "organizer": "Korpen Stockholm", "type": "Korpen (motion)", "deadline": null, "status": "not_published", "summary": null, "classes": [], "stupa": null, "invite": null, "web": "https://www.korpen.se/korpenstockholm/aktiviteter/bordtennis/tavling/", "note": null, "extra": null}, {"name": "Tibble-smashen 2027", "start": "2027-05-08", "end": "2027-05-09", "city": "Kungsängen", "venue": "Kungshallen", "address": "Klockvägen 5, Kungsängen", "drive": 30, "organizer": "Tibble Kungsängen BTK", "type": "Breddtävling", "deadline": null, "status": "previous_year", "summary": null, "classes": [], "stupa": null, "invite": null, "web": "https://www.tkbtk.se/sida/83219/tavlingar-pa-gang", "note": null, "extra": null}, {"name": "Roslagsduellen maj 2027", "start": "2027-05-08", "end": "2027-05-09", "city": "Åkersberga", "venue": "Österåkers Multiarena", "address": "Företagsallén, Åkersberga", "drive": 35, "organizer": "IFK Österåkers BTK", "type": "Nationell tävling", "deadline": null, "status": "previous_year", "summary": null, "classes": [], "stupa": null, "invite": null, "web": "https://www.ifkosterakersbtk.se/btk/grp/xtcmplist.php", "note": null, "extra": null}, {"name": "Drive In-veckan", "start": "2027-05-10", "end": "2027-05-13", "city": "Liljeholmen", "venue": "Liljeholmshallen", "address": "Mejerivägen 4, Stockholm", "drive": 10, "organizer": "Stockholms BTF och STIGA", "type": "Drive-in", "deadline": null, "status": "previous_year", "summary": null, "classes": [], "stupa": null, "invite": null, "web": "https://www.stbtf.se/tavlingar-seriespel-ranking/drive-in/", "drive_in": true, "note": null, "extra": null}, {"name": "Tyresö Stiga Loopen 2027", "start": "2027-05-15", "end": "2027-05-16", "city": "Tyresö", "venue": "Forellhallen", "address": "Forelltorget 5, Tyresö", "drive": 25, "organizer": "Tyresö BTK", "type": "Nationell tävling", "deadline": null, "status": "previous_year", "summary": null, "note": null, "classes": [], "extra": null, "stupa": null, "invite": null, "web": "https://tyresobtk.klubbenonline.se/tavlingar/tyreso-loopen-2026"}, {"name": "Volvo Poolen", "start": "2027-05-22", "end": "2027-05-23", "city": "Eskilstuna", "venue": "Munktellarenan", "address": "Verkstadsgatan 5, Eskilstuna", "drive": 80, "organizer": "Eskilstuna BTK", "type": "Nationell tävling", "deadline": null, "status": "not_published", "summary": null, "note": null, "classes": [], "stupa": null, "invite": null, "web": "https://www.ebtk.se/Page/452847", "extra": null}, {"name": "Stockholm Open 2027", "start": "2027-05-22", "end": "2027-05-23", "city": "Farsta", "venue": "Farstahallen", "address": "Farstaängsvägen, Farsta", "drive": 20, "organizer": "Norrtulls SK", "type": "Regional tävling", "deadline": null, "status": "previous_year", "summary": null, "note": null, "classes": [], "extra": null, "stupa": null, "invite": null, "web": "https://norrtullssk.se/tvlingar"}, {"name": "Bajens Sommaryra 2027", "start": "2027-05-29", "end": "2027-05-30", "city": "Hägersten", "venue": "Liljeholmshallen", "address": "Liljeholmsstranden 15, Stockholm", "drive": 10, "organizer": "Hammarby IF BTF", "type": "Nationell tävling", "deadline": null, "status": "previous_year", "summary": null, "note": null, "classes": [], "extra": null, "stupa": null, "invite": null, "web": "https://www.hammarbybordtennis.se/sida/?ID=398951"}, {"name": "Tjejraketen Tour 2026/27", "start": null, "end": null, "city": "Svealand (ort ej klar)", "venue": "Plats inte klar", "address": "", "drive": 0, "driveText": null, "organizer": "SBTF (2026 med Stratos Enköping BTK)", "type": "Tjejraketen", "deadline": null, "status": "previous_year", "tjej": true, "summary": null, "note": null, "classes": [], "extra": null, "stupa": null, "invite": null, "web": "https://sbtf.se/kalender/tjejraketen-tour/"}];
+const UPDATED = "2026-11-23";
+</script>
+<script>
+(function(){
+  // "Today" is the visitor's own date, so countdowns and closed entries are always current.
+  const now=new Date(), today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  const updated=new Date(UPDATED+"T00:00:00");
+  const MONTHS=["januari","februari","mars","april","maj","juni","juli","augusti","september","oktober","november","december"];
+  const MSHORT=["jan","feb","mar","apr","maj","jun","jul","aug","sep","okt","nov","dec"];
+  const WD=["sön","mån","tis","ons","tors","fre","lör"];
+  const WDL=["söndag","måndag","tisdag","onsdag","torsdag","fredag","lördag"];
+  const $=s=>document.querySelector(s);
+  const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  const d=s=>new Date(s+"T00:00:00");
+  const days=(a,b)=>Math.round((a-b)/864e5);
+  const slug=s=>s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+  const fmtDay=s=>{const x=d(s);return WD[x.getDay()]+" "+x.getDate()+" "+MSHORT[x.getMonth()]};
+  const fmtLong=s=>{const x=d(s);return x.getDate()+" "+MONTHS[x.getMonth()]};
+  // All entries go through one person; organisers' own entry instructions are not shown.
+  const CONTACT="Julia von Krusenstierna";
+  const STRIP=/(förening(en)?|klubb(en)?)\s+(anmäler|skickar)|anmälan\s+(görs\s+|sker\s+)?(själv\s+)?(via|till|på|med|online)\b|anmäler\s+(sig\s+)?(\S+\s+)?(via|till|på)\b|faktureras|personnummer|födelsedatum|pingisarenan|stupa|swish|zoezi|[\w.+-]+@[\w-]+\.[\w.]+|kontakt:/i;
+  const clean=s=>(s||"").split(/(?<=[.!?])\s+/).filter(x=>x&&!STRIP.test(x)).join(" ").trim();
+  const left=t=>days(d(t.deadline),today);
+  const leftTxt=n=>n===0?"sista dagen idag":n===1?"1 dag kvar":n+" dagar kvar";
+
+
+  const isOpen=t=>t.start&&t.status==="published"&&t.deadline&&d(t.deadline)>=today&&(!t.opens||d(t.opens)<=today);
+  const closed=t=>t.status==="published"&&t.deadline&&d(t.deadline)<today;
+  const notPlayed=t=>t.start&&d(t.end||t.start)>=today;
+  const isLater=t=>t.start&&d(t.start)>=today&&!isOpen(t)&&!closed(t);
+  // Closed tournaments stay (until played) only if flagged "vis" by build.py.
+  const isClosed=t=>closed(t)&&notPlayed(t)&&t.vis===true;
+
+  function playWhen(t){
+    const a=d(t.start), b=d(t.end||t.start);
+    if(t.start===(t.end||t.start)) return {main:a.getDate()+" "+MONTHS[a.getMonth()],sub:""};
+    const span=a.getMonth()===b.getMonth()?a.getDate()+"–"+b.getDate()+" "+MONTHS[a.getMonth()]:a.getDate()+" "+MSHORT[a.getMonth()]+" – "+b.getDate()+" "+MSHORT[b.getMonth()];
+    return {main:span,sub:WD[a.getDay()]+"–"+WD[b.getDay()]+", "+(days(b,a)+1)+" dagar"};
+  }
+
+  function statusBlock(t){
+    let cls,main,sub="";
+    if(t.drive_in){const wd=WDL[d(t.start).getDay()]+(t.end&&t.end!==t.start?"–"+WDL[d(t.end).getDay()]:"");return '<div class="status st-open"><div><b>'+wd.charAt(0).toUpperCase()+wd.slice(1)+'</b><span>Anmälan sker på plats</span></div></div>';}
+    if(isClosed(t)){cls="st-closed";main="Anmälan stängd";sub="Sista anmälan var "+fmtLong(t.deadline)+".";}
+    else if(isOpen(t)){cls="st-open";main="Sista anmälan "+fmtLong(t.deadline);sub="Anmäl dig till "+esc(CONTACT);}
+    else if(t.opens&&t.status==="published"){cls="st-soon";main="Anmälan öppnar "+fmtLong(t.opens);sub="Sista anmälan "+fmtLong(t.deadline)+". Anmäl dig till "+esc(CONTACT)+".";}
+    else {cls="st-later";main="Inbjudan inte publicerad än";sub="";}
+    return '<div class="status '+cls+'"><div><b>'+main+'</b>'+(sub?'<span>'+sub+'</span>':'')+'</div></div>';
+  }
+
+  function dayCol(t){
+    const a=d(t.start), b=d(t.end||t.start), multi=t.start!==(t.end||t.start);
+    const num=multi&&a.getMonth()===b.getMonth()?a.getDate()+"–"+b.getDate():a.getDate();
+    const mon=multi&&a.getMonth()!==b.getMonth()?MSHORT[a.getMonth()]+"–"+MSHORT[b.getMonth()]:MSHORT[a.getMonth()];
+    const wd=WD[a.getDay()]+(multi?"–"+WD[b.getDay()]:"");
+    return '<div class="day" aria-hidden="true"><span class="dn">'+num+'</span><span class="dm">'+mon+'</span></div>';
+  }
+
+  function card(t){
+    const open=isOpen(t), shut=isClosed(t), prevYear=t.status!=="published"&&!t.drive_in;
+    const note=clean(t.note), extra=clean(t.extra);
+    const when=playWhen(t);
+    const rows=(t.classes||[]).map(c=>'<tr><td class="cls" data-l="Klass">'+esc(c.name)+'</td><td data-l="Beskrivning">'+esc(c.desc)+'</td><td data-l="När">'+esc(c.day||"–")+'</td><td class="fee" data-l="Avgift">'+(typeof c.fee==="number"?c.fee+" kr":esc(c.fee||"–"))+'</td></tr>').join("");
+    const actions=[
+      t.invite&&!prevYear&&'<a class="btn'+(open?' primary':'')+'" href="'+esc(t.invite)+'" target="_blank" rel="noopener">Läs inbjudan <span aria-hidden="true">↗</span><span class="sr"> (öppnas i ny flik)</span></a>',
+      t.stupa&&!prevYear&&'<a class="btn" href="'+esc(t.stupa)+'" target="_blank" rel="noopener">Tävlingen på Stupa <span aria-hidden="true">↗</span><span class="sr"> (öppnas i ny flik)</span></a>',
+      t.web&&'<a class="btn" href="'+esc(t.web)+'" target="_blank" rel="noopener">Arrangörens sida <span aria-hidden="true">↗</span><span class="sr"> (öppnas i ny flik)</span></a>'
+    ].filter(Boolean).join("");
+    return '<article class="t'+(open?' is-open':shut?' closed':' later')+(t.tjej?' tjej':'')+'" id="'+slug(t.name)+'">'+
+      dayCol(t)+
+      '<div class="body">'+
+        '<div class="head"><h3>'+esc(t.name)+'</h3>'+(t.tjej?'<span class="tag pink">Tjejraketen</span>':'')+'<span class="tag">'+esc(t.type)+'</span></div>'+
+        '<p class="where"><span class="sr">Spelas '+when.main+'. </span>'+esc(t.venue||t.city)+(t.address?' <span class="addr">· '+esc(t.address)+'</span>':'')+'</p>'+
+        statusBlock(t)+
+        (t.summary?'<p class="summary">'+esc(t.summary)+'</p>':'')+
+        
+        (note&&!prevYear&&!shut?'<p class="note"><b>Bra att veta:</b> '+esc(note)+'</p>':'')+
+        '<div class="foot">'+(actions?'<div class="actions">'+actions+'</div>':'')+
+        ''+'</div>'+
+      '</div>'+
+    '</article>';
+  }
+
+  const state={q:"",tjej:false};
+
+  function groupsFor(list){
+    const g=[];const push=(k,label,t)=>{let x=g.find(y=>y.k===k);if(!x){x={k,label,items:[]};g.push(x)}x.items.push(t)};
+    list.sort((a,b)=>a.start.localeCompare(b.start)||(a.deadline||"").localeCompare(b.deadline||""));
+    list.forEach(t=>{const x=d(t.start);push(t.start.slice(0,7),MONTHS[x.getMonth()].replace(/^./,c=>c.toUpperCase())+" "+x.getFullYear(),t)});
+    return g;
+  }
+
+  function render(){
+    // Sweden Tour GP and Sweden Star are never shown.
+    const ALL=DATA.filter(t=>!/sweden\s*(tour\s*)?(star|gp)/i.test((t.type||"")+" "+t.name));
+    const open=ALL.filter(isOpen), later=ALL.filter(isLater);
+    const shut=ALL.filter(isClosed);
+    const pool=open.concat(later,shut);
+    const hasTjej=pool.some(t=>t.tjej);
+    $("#f-tjej").hidden=!hasTjej; if(!hasTjej) state.tjej=false;
+    $("#f-tjej").setAttribute("aria-pressed",state.tjej);
+    $("#q-clear").hidden=!state.q;
+
+
+    const q=state.q.trim().toLowerCase();
+    const list=pool.filter(t=>!state.tjej||t.tjej).filter(t=>!q||JSON.stringify(t).toLowerCase().includes(q));
+
+    const intro="";
+    if(!pool.length){$("#out").innerHTML=intro+'<div class="empty"><p>'+'Inga kommande tävlingar i listan just nu.'+' Listan uppdateras måndagar och torsdagar.</p></div>';return;}
+    if(!list.length){$("#out").innerHTML=intro+'<div class="empty"><p>Inga tävlingar matchar '+(q?'”'+esc(state.q)+'”':'filtret')+'.</p><button type="button" class="btn" id="reset">Visa alla</button></div>';$("#reset").onclick=()=>{state.q="";state.tjej=false;$("#q").value="";render()};return;}
+
+    $("#out").innerHTML=intro+groupsFor(list).map(g=>'<section class="group" aria-label="'+esc(g.label)+'"><h2>'+esc(g.label)+' <span class="n">'+g.items.length+(g.items.length===1?' tävling':' tävlingar')+'</span></h2><div class="list">'+g.items.map(card).join("")+'</div></section>').join("");
+  }
+
+  $("#q").addEventListener("input",e=>{state.q=e.target.value;render()});
+  $("#q-clear").addEventListener("click",()=>{state.q="";$("#q").value="";$("#q").focus();render()});
+  $("#f-tjej").addEventListener("click",()=>{state.tjej=!state.tjej;render()});
+  const cp=document.getElementById("swish-copy");
+  if(cp) cp.addEventListener("click",()=>{
+    const done=()=>{cp.textContent="Kopierat";setTimeout(()=>cp.textContent="Kopiera nummer",2000)};
+    try{navigator.clipboard.writeText("1230635821").then(done,()=>{const r=document.createRange();r.selectNodeContents(document.getElementById("swish-nr"));const sel=getSelection();sel.removeAllRanges();sel.addRange(r);cp.textContent="Markerat – kopiera med Cmd/Ctrl+C"})}
+    catch(e){const r=document.createRange();r.selectNodeContents(document.getElementById("swish-nr"));const sel=getSelection();sel.removeAllRanges();sel.addRange(r)}
+  });
+  render();
+})();
+</script>
+
+</body>
+</html>
