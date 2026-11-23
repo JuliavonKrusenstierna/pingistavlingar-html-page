@@ -258,8 +258,6 @@ footer p{margin:0 0 6px}
 .pay p:last-child{margin-bottom:0}
 .swish{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px}
 .swish .num{font:700 24px var(--display);letter-spacing:.04em;color:var(--jg);user-select:all;font-variant-numeric:tabular-nums}
-.copy{font:500 13px var(--body);padding:6px 12px;border-radius:4px;border:1px solid var(--line);background:var(--surface);color:var(--jg-link);cursor:pointer}
-.copy:hover{border-color:var(--jg)}
 </style>
 
 <style>
@@ -288,7 +286,7 @@ article.t.closed{opacity:.8}
     <div class="pay">
       <h3>Så betalar du</h3>
       <p>Vänta med att betala tills klubben har bekräftat din anmälan. Swisha sedan anmälningsavgiften till Jarlabergs BTK:</p>
-      <p class="swish"><span class="num" id="swish-nr">123 063 58 21</span> <button type="button" class="copy" id="swish-copy">Kopiera nummer</button></p>
+      <p class="swish"><span class="num" id="swish-nr">123 063 58 21</span></p>
       <p>Skriv ditt namn, tävlingen och klassen i meddelandet, så vet vi vad betalningen gäller. Till exempel: <i>”Anna Svensson, Jarlabergsspelen, Max 1500p”</i>.</p>
     </div>
   </section>
@@ -429,12 +427,6 @@ const UPDATED = "2026-11-23";
   $("#q").addEventListener("input",e=>{state.q=e.target.value;render()});
   $("#q-clear").addEventListener("click",()=>{state.q="";$("#q").value="";$("#q").focus();render()});
   $("#f-tjej").addEventListener("click",()=>{state.tjej=!state.tjej;render()});
-  const cp=document.getElementById("swish-copy");
-  if(cp) cp.addEventListener("click",()=>{
-    const done=()=>{cp.textContent="Kopierat";setTimeout(()=>cp.textContent="Kopiera nummer",2000)};
-    try{navigator.clipboard.writeText("1230635821").then(done,()=>{const r=document.createRange();r.selectNodeContents(document.getElementById("swish-nr"));const sel=getSelection();sel.removeAllRanges();sel.addRange(r);cp.textContent="Markerat – kopiera med Cmd/Ctrl+C"})}
-    catch(e){const r=document.createRange();r.selectNodeContents(document.getElementById("swish-nr"));const sel=getSelection();sel.removeAllRanges();sel.addRange(r)}
-  });
   render();
 })();
 </script>
