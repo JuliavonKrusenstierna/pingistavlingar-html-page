@@ -342,8 +342,7 @@ details.t.closed{opacity:.8}
   <main id="out" tabindex="-1"></main>
 
   <footer>
-    <p>Källor: SBTF:s tävlingsprogram 2026–27, Stockholms Bordtennisförbund, Stupa/Pingisarenan och arrangörernas webbplatser. Listan uppdateras måndagar och torsdagar.</p>
-    <p>Alla anmälningar görs via Julia von Krusenstierna.</p>
+    <p>Källor: SBTF:s tävlingsprogram 2026–27, Stockholms Bordtennisförbund, Stupa/Pingisarenan och arrangörernas webbplatser.</p>
   </footer>
 </div>
 
@@ -466,7 +465,7 @@ const UPDATED = "2026-11-23";
     const list=pool.filter(t=>!state.tjej||t.tjej).filter(t=>!q||JSON.stringify(t).toLowerCase().includes(q));
 
     const intro="";
-    if(!pool.length){$("#out").innerHTML=intro+'<div class="empty"><p>'+'Inga kommande tävlingar i listan just nu.'+' Listan uppdateras måndagar och torsdagar.</p></div>';return;}
+    if(!pool.length){$("#out").innerHTML=intro+'<div class="empty"><p>'+'Inga kommande tävlingar i listan just nu.'+'</p></div>';return;}
     if(!list.length){$("#out").innerHTML=intro+'<div class="empty"><p>Inga tävlingar matchar '+(q?'”'+esc(state.q)+'”':'filtret')+'.</p><button type="button" class="btn" id="reset">Visa alla</button></div>';$("#reset").onclick=()=>{state.q="";state.tjej=false;$("#q").value="";render()};return;}
 
     $("#out").innerHTML=intro+groupsFor(list).map(g=>'<section class="group" aria-label="'+esc(g.label)+'"><h2>'+esc(g.label)+' <span class="n">'+g.items.length+(g.items.length===1?' tävling':' tävlingar')+'</span></h2><div class="list">'+g.items.map(card).join("")+'</div></section>').join("");
@@ -476,6 +475,15 @@ const UPDATED = "2026-11-23";
   $("#q-clear").addEventListener("click",()=>{state.q="";$("#q").value="";$("#q").focus();render()});
   $("#f-tjej").addEventListener("click",()=>{state.tjej=!state.tjej;render()});
   render();
+  // When embedded in an iframe, tell the parent page how tall the content is, so the frame can grow instead of scrolling.
+  try{
+    if(window.parent!==window){
+      const send=()=>parent.postMessage({pingisHeight:Math.ceil(document.documentElement.getBoundingClientRect().height)},"*");
+      new ResizeObserver(send).observe(document.documentElement);
+      window.addEventListener("load",send);
+      send();
+    }
+  }catch(e){}
 })();
 </script>
 
