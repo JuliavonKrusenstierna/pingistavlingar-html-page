@@ -297,6 +297,11 @@ details.t .p-soon{background:#ecd08a;color:#4a3a10}
 details.t .day .dn{font-size:24px;white-space:nowrap;letter-spacing:0}
 details.t .day .dm{font-size:13px}
 @media (max-width:640px){details.t .day .dn{font-size:17px}details.t .day .dm{font-size:12px}}
+
+/* Status label to the right of the tournament name */
+details.t .nm{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:4px 10px}
+details.t .nm h3{margin:0 0 4px;flex:1 1 auto;min-width:0}
+details.t .nm .pill{margin:0 0 4px;flex:none}
 </style>
 
 <style>
@@ -426,8 +431,8 @@ const UPDATED = "2026-11-23";
     ].filter(Boolean).join("");
     return '<details class="t'+(open?' is-open':shut?' closed':' later')+(t.tjej?' tjej':'')+'" id="'+slug(t.name)+'">'+
       '<summary>'+dayCol(t)+
-        '<div class="sb"><h3>'+esc(t.name)+'</h3>'+
-        '<p class="where"><span class="sr">Spelas '+when.main+'. </span><b>'+esc(t.venue||t.city)+'</b>'+(t.organizer?' <span class="addr">· '+esc(t.organizer)+'</span>':'')+'</p>'+pill(t)+'</div>'+
+        '<div class="sb"><div class="nm"><h3>'+esc(t.name)+'</h3>'+pill(t)+'</div>'+
+        '<p class="where"><span class="sr">Spelas '+when.main+'. </span><b>'+esc(t.venue||t.city)+'</b>'+(t.organizer?' <span class="addr">· '+esc(t.organizer)+'</span>':'')+'</p></div>'+
         '<span class="chev" aria-hidden="true"></span></summary>'+
       '<div class="exp">'+
         '<div class="tags">'+(t.tjej?'<span class="tag pink">Tjejraketen</span>':'')+'<span class="tag">'+esc(t.type)+'</span></div>'+
